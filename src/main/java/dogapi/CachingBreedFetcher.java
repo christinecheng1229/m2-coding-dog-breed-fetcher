@@ -15,7 +15,7 @@ import java.util.*;
 public class CachingBreedFetcher implements BreedFetcher {
     // TODO Task 2: Complete this class
     private int callsMade = 0;
-    public CachingBreedFetcher(BreedFetcher fetcher) {
+    public CachingBreedFetcher(BreedFetcher fetcher) throws BreedNotFoundException{
 
     }
 
