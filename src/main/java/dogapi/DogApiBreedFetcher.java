@@ -34,7 +34,8 @@ public class DogApiBreedFetcher implements BreedFetcher {
                 .url(String.format("https://dog.ceo/api/breed/%s/list", breed))
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
+        try {
+            Response response = client.newCall(request).execute();
             JSONObject responseBody = new JSONObject(response.body().string());
             if (responseBody.getString("status") == "success") {
                 JSONArray subBreedsResults = responseBody.getJSONArray("message");
@@ -44,12 +45,15 @@ public class DogApiBreedFetcher implements BreedFetcher {
                 }
                 return subBreeds;
             }
+            else if (responseBody.getString("message").equals("Breed not found (main breed does not exist)")) {
+                throw new BreedNotFoundException(breed);
+            }
             else {
-                // TODO make sure message is not a JSON array when the API call is unsuccessful
+                // TODO make sure message is a JSON array when the API call is unsuccessful
                 throw new RuntimeException(String.valueOf(responseBody.getJSONArray("message")));
             }
-            // TODO make a more precise exception catch
-        } catch (IOException e) {
+        // TODO make a more precise exception catch
+        } catch (IOException  e) {
             throw new RuntimeException(e);
         }
     }
