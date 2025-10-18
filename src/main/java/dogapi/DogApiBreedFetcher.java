@@ -31,22 +31,22 @@ public class DogApiBreedFetcher implements BreedFetcher {
         //      to refer to the examples of using OkHttpClient from the last lab,
         //      as well as the code for parsing JSON responses.
         Request request = new Request.Builder()
-                .url("https://dog.ceo/api/breed/" + breed + "/list")
+                .url(String.format("https://dog.ceo/api/breed/%s/list", breed))
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
             JSONObject responseBody = new JSONObject(response.body().string());
             if (responseBody.getString("status") == "success") {
                 JSONArray subBreedsResults = responseBody.getJSONArray("message");
-                List<String> subBreeds = new new ArrayList<>();
+                List<String> subBreeds = new ArrayList<>();
                 for (int i = 0; i < subBreedsResults.length(); i++) {
                     subBreeds.add(subBreedsResults.getString(i));
                 }
                 return subBreeds;
             }
             else {
-                // TODO make sure message is not a JSON array the API call is unsuccessful
-                throw new RuntimeException(responseBody.getString("message"));
+                // TODO make sure message is not a JSON array when the API call is unsuccessful
+                throw new RuntimeException(String.valueOf(responseBody.getJSONArray("message")));
             }
             // TODO make a more precise exception catch
         } catch (IOException e) {
