@@ -14,15 +14,30 @@ import java.util.*;
  */
 public class CachingBreedFetcher implements BreedFetcher {
     // TODO Task 2: Complete this class
-    private int callsMade = 0;
-    public CachingBreedFetcher(BreedFetcher fetcher) throws BreedNotFoundException{
+    private BreedFetcher fetcher;
+    private int callsMade;
+    private Map<String, List<String>> cache;
+
+    public CachingBreedFetcher(BreedFetcher fetcher) {
+        this.fetcher = fetcher;
+        this.callsMade = 0;
+        this.cache = new HashMap<>();
 
     }
 
     @Override
-    public List<String> getSubBreeds(String breed) {
-        // return statement included so that the starter code can compile and run.
-        return new ArrayList<>();
+    public List<String> getSubBreeds(String breed) throws BreedNotFoundException {
+        if (!cache.containsKey(breed)) {
+            // the specified breed hasn't been cached
+            try {
+                cache.put(breed, fetcher.getSubBreeds(breed));
+                callsMade ++;
+            } catch (BreedNotFoundException e) {
+                callsMade ++;
+                throw new BreedNotFoundException(breed);
+            }
+        }
+        return cache.get(breed);
     }
 
     public int getCallsMade() {
