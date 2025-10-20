@@ -37,7 +37,7 @@ public class DogApiBreedFetcher implements BreedFetcher {
         try {
             Response response = client.newCall(request).execute();
             JSONObject responseBody = new JSONObject(response.body().string());
-            if (responseBody.getString("status") == "success") {
+            if (Objects.equals(responseBody.getString("status"), "success")) {
                 JSONArray subBreedsResults = responseBody.getJSONArray("message");
                 List<String> subBreeds = new ArrayList<>();
                 for (int i = 0; i < subBreedsResults.length(); i++) {
@@ -45,12 +45,8 @@ public class DogApiBreedFetcher implements BreedFetcher {
                 }
                 return subBreeds;
             }
-            else if (responseBody.getString("message").equals("Breed not found (main breed does not exist)")) {
-                throw new BreedNotFoundException(breed);
-            }
             else {
-                // TODO make sure message is a JSON array when the API call is unsuccessful
-                throw new RuntimeException(String.valueOf(responseBody.getJSONArray("message")));
+                throw new BreedNotFoundException(breed);
             }
         // TODO make a more precise exception catch
         } catch (IOException  e) {

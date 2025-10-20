@@ -5,7 +5,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        try {
+//        try {
             String breed = "hound";
             BreedFetcher breedFetcher = new CachingBreedFetcher(new BreedFetcherForLocalTesting());
             int result = getNumberOfSubBreeds(breed, breedFetcher);
@@ -14,9 +14,9 @@ public class Main {
             breed = "cat";
             result = getNumberOfSubBreeds(breed, breedFetcher);
             System.out.println(breed + " has " + result + " sub breeds");
-        } catch (BreedFetcher.BreedNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+//        } catch (BreedFetcher.BreedNotFoundException e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
     /**
